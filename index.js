@@ -1,5 +1,5 @@
 module.exports = {
-	RuleBefore: function (rule) {
+	Rule: function (rule) {
 		var prefix = rule.children('Selector').length > 1 ? ':matches(' + rule.selector + ')' : rule.selector;
 		var index = rule.index();
 

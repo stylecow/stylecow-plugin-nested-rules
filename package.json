@@ -1,7 +1,7 @@
 {
 	"name": "stylecow-plugin-nested-rules",
 	"description": "Stylecow plugin to add support for nested rules.",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"author": "Oscar Otero <oom@oscarotero.com>",
 	"homepage": "https://github.com/stylecow/stylecow-plugin-nested-rules",
 	"bugs": "https://github.com/stylecow/stylecow-plugin-nested-rules/issues",
