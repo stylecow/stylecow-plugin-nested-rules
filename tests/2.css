@@ -1,0 +1,13 @@
+body {
+	--color: blue;
+	color: var(--color);
+
+	article, section {
+		color: var(--color);
+		--color: green;
+
+		strong, span, em {
+			color: var(--color);
+		}
+	}
+}

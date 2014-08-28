@@ -1,0 +1,11 @@
+body {
+	font-size: 1em;
+
+	article, section {
+		display: block;
+
+		strong, span, em {
+			font-weight: normal;
+		}
+	}
+}

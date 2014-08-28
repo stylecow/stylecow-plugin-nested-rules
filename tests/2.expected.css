@@ -1,0 +1,9 @@
+body {
+	color: blue;
+}
+body article, body section {
+	color: blue;
+}
+body article strong, body section strong, body article span, body section span, body article em, body section em {
+	color: green;
+}
