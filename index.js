@@ -10,10 +10,10 @@ module.exports = function (stylecow) {
 					var prepend = false;
 
 					if (childSelector.name[0] === '&') {
-						childSelector.name = childSelector.name.substr(1);
+						childSelector[0].name = childSelector[0].name.substr(1);
 						space = '';
 
-						if (/^\w/.test(childSelector.name)) {
+						if (/^\w/.test(childSelector[0].name)) {
 							prepend = true;
 						}
 					}
