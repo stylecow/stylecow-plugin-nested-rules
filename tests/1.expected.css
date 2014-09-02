@@ -7,3 +7,12 @@ body article, body section {
 body article strong, body section strong, body article span, body section span, body article em, body section em {
 	font-weight: normal;
 }
+p strong a {
+	text-decoration: none;
+}
+article.red {
+	background: red;
+}
+p.red {
+	border-color: red;
+}
