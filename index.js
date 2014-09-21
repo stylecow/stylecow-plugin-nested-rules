@@ -32,7 +32,7 @@ module.exports = function (stylecow) {
 							code = ruleSelector.name + space + childSelector.name;
 						}
 
-						child.add(stylecow.css.Selector.create(code));
+						child.add(stylecow.Selector.create(code));
 					});
 
 					childSelector.detach();
