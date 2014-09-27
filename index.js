@@ -1,5 +1,6 @@
 module.exports = function (stylecow) {
-	return {
+
+	stylecow.addTask({
 		Rule: function (rule) {
 			var ruleSelectors = rule.children('Selector');
 			var index = rule.index();
@@ -45,5 +46,5 @@ module.exports = function (stylecow) {
 				rule.remove();
 			}
 		}
-	}
+	});
 };
