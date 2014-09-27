@@ -2,7 +2,12 @@ stylecow plugin nested-rules
 ============================
 
 Stylecow plugin to add support for nested rules.
-Use the plugin "matches" to convert the result in old-style css code.
+
+More info:
+
+* https://drublic.de/blog/the-css-hierarchies-module-level-3/
+* http://lists.w3.org/Archives/Public/www-style/2011Jun/0022.html
+
 
 You write:
 
@@ -34,13 +39,13 @@ And stylecow converts to:
 body p {
 	color: blue;
 }
-body>section :matches(h1, h2) {
+body>section h1, body>section h2 {
 	color: red;
 }
-body>section :matches(h1, h2).green {
+body>section h1 .green, body>section h2.green {
 	color: green;
 }
-body :matches(div, span) a {
+body div a, body span a {
 	color: orange;
 }
 ```
