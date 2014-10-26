@@ -2,47 +2,68 @@ module.exports = function (stylecow) {
 
 	stylecow.addTask({
 		Rule: function (rule) {
-			var ruleSelectors = rule.children('Selector');
+			var ruleSelectors = rule.children({type: 'Selector'});
 			var index = rule.index();
 
-			rule.children('Rule').forEach(function (child, i) {
-				child.children('Selector').forEach(function (childSelector) {
-					var space = ' ';
-					var prepend = false;
+			var i = 0;
 
-					if (childSelector.name[0] === '&') {
-						childSelector[0].name = childSelector[0].name.substr(1);
-						space = '';
+			rule.children({type: 'Rule'}).forEach(function (child) {
+				child.children({type: 'Selector'}).forEach(function (childSelector) {
+					var prepend;
 
-						if (/^\w/.test(childSelector[0].name)) {
-							prepend = true;
-						}
+					if (childSelector[0].name === '&') {
+						childSelector[0].remove();
+						prepend = /^\w/.test(childSelector[0].name);
+					} else {
+						childSelector.prepend(new stylecow.Keyword(' '));
 					}
 
 					ruleSelectors.forEach(function (ruleSelector) {
-						var code;
+						var selector = child.add(new stylecow.Selector);
 
 						if (prepend) {
-							var content = ruleSelector.content;
+							ruleSelector.slice(0, -1).forEach(function (child) {
+								selector.add(child.clone());
+							});
 
-							code = content.slice(0, -1);
-							code.push(childSelector[0].name);
-							code.push(content.slice(-1));
-							code = code.concat(childSelector.slice(1)).join('');
+							childSelector.slice(0, 1).forEach(function (child) {
+								selector.add(child.clone());
+							});
+
+							ruleSelector.slice(-1).forEach(function (child) {
+								selector.add(child.clone());
+							});
+
+							childSelector.slice(1).forEach(function (child) {
+								selector.add(child.clone());
+							});
 						} else {
-							code = ruleSelector.name + space + childSelector.name;
-						}
+							ruleSelector.forEach(function (child) {
+								selector.add(child.clone());
+							});
 
-						child.add(stylecow.Selector.create(code));
+							childSelector.forEach(function (child) {
+								selector.add(child.clone());
+							});
+						}
 					});
 
 					childSelector.detach();
 				});
 
+				var prev = child.prev();
+
 				rule.parent.add(child, index + i, true);
+
+				if (prev.type === 'Comment') {
+					child.insertBefore(prev);
+					++i;
+				}
+
+				++i;
 			});
 
-			if (rule.children('Selector').length === rule.length) {
+			if (rule.children({type: 'Selector'}).length === rule.length) {
 				rule.remove();
 			}
 		}
