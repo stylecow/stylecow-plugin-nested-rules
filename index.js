@@ -1,5 +1,7 @@
 module.exports = function (stylecow) {
 
+	var operators = ['>', '~', '+'];
+
 	stylecow.addTask({
 		Rule: function (rule) {
 			var ruleSelectors = rule.children({type: 'Selector'});
@@ -14,7 +16,7 @@ module.exports = function (stylecow) {
 					if (childSelector[0].name === '&') {
 						childSelector[0].remove();
 						prepend = /^\w/.test(childSelector[0].name);
-					} else {
+					} else if (operators.indexOf(childSelector[0].name) === -1) {
 						childSelector.prepend(new stylecow.Keyword(' '));
 					}
 
