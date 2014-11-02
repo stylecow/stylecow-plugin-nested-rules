@@ -17,7 +17,7 @@ module.exports = function (stylecow) {
 						childSelector[0].remove();
 						prepend = /^\w/.test(childSelector[0].name);
 					} else if (operators.indexOf(childSelector[0].name) === -1) {
-						childSelector.prepend(new stylecow.Keyword(' '));
+						childSelector.unshift(new stylecow.Keyword(' '));
 					}
 
 					ruleSelectors.forEach(function (ruleSelector) {
@@ -25,27 +25,27 @@ module.exports = function (stylecow) {
 
 						if (prepend) {
 							ruleSelector.slice(0, -1).forEach(function (child) {
-								selector.add(child.clone());
+								selector.push(child.clone());
 							});
 
 							childSelector.slice(0, 1).forEach(function (child) {
-								selector.add(child.clone());
+								selector.push(child.clone());
 							});
 
 							ruleSelector.slice(-1).forEach(function (child) {
-								selector.add(child.clone());
+								selector.push(child.clone());
 							});
 
 							childSelector.slice(1).forEach(function (child) {
-								selector.add(child.clone());
+								selector.push(child.clone());
 							});
 						} else {
 							ruleSelector.forEach(function (child) {
-								selector.add(child.clone());
+								selector.push(child.clone());
 							});
 
 							childSelector.forEach(function (child) {
-								selector.add(child.clone());
+								selector.push(child.clone());
 							});
 						}
 					});
@@ -55,10 +55,10 @@ module.exports = function (stylecow) {
 
 				var prev = child.prev();
 
-				rule.parent.add(child, index + i, true);
+				rule.parent().add(child, index + i + 1);
 
 				if (prev.type === 'Comment') {
-					child.insertBefore(prev);
+					child.before(prev);
 					++i;
 				}
 
