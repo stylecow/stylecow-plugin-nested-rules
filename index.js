@@ -50,7 +50,7 @@ module.exports = function (stylecow) {
 						}
 					});
 
-					childSelector.detach();
+					childSelector.remove();
 				});
 
 				var prev = child.prev();
