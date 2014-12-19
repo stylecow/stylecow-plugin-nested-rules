@@ -1,73 +1,63 @@
 module.exports = function (stylecow) {
 
-	var operators = ['>', '~', '+'];
-
 	stylecow.addTask({
-		Rule: function (rule) {
-			var ruleSelectors = rule.children({type: 'Selector'});
-			var index = rule.index();
+		Rule: function (parentRule) {
+			var parentSelectors = parentRule.firstChild({type: 'Selectors'});
+			var index = parentRule.index();
+			var offset = 1;
 
-			var i = 0;
+			parentRule
+				.firstChild({type: 'Block'})
+				.children({type: 'Rule'})
+				.forEach(function (rule) {
+					var selectors = rule.firstChild({type: 'Selectors'});
+					var mergedSelectors = new stylecow.Selectors();
 
-			rule.children({type: 'Rule'}).forEach(function (child) {
-				child.children({type: 'Selector'}).forEach(function (childSelector) {
-					var prepend;
+					parentSelectors.forEach(function (parentSelector) {
+						selectors.forEach(function (selector) {
+							var mergedSelector = parentSelector.clone();
 
-					if (childSelector[0].name === '&') {
-						childSelector[0].remove();
-						prepend = /^\w/.test(childSelector[0].name);
-					} else if (operators.indexOf(childSelector[0].name) === -1) {
-						childSelector.unshift(new stylecow.Keyword(' '));
-					}
+							merge(mergedSelector, selector[0].clone());
 
-					ruleSelectors.forEach(function (ruleSelector) {
-						var selector = child.add(new stylecow.Selector);
-
-						if (prepend) {
-							ruleSelector.slice(0, -1).forEach(function (child) {
-								selector.push(child.clone());
+							selector.slice(1).forEach(function (element) {
+								mergedSelector.push(element.clone());
 							});
 
-							childSelector.slice(0, 1).forEach(function (child) {
-								selector.push(child.clone());
-							});
-
-							ruleSelector.slice(-1).forEach(function (child) {
-								selector.push(child.clone());
-							});
-
-							childSelector.slice(1).forEach(function (child) {
-								selector.push(child.clone());
-							});
-						} else {
-							ruleSelector.forEach(function (child) {
-								selector.push(child.clone());
-							});
-
-							childSelector.forEach(function (child) {
-								selector.push(child.clone());
-							});
-						}
+							mergedSelectors.push(mergedSelector);
+						});
 					});
 
-					childSelector.remove();
+					selectors.replaceWith(mergedSelectors);
+
+					parentRule.parent().splice(index + offset, 0, rule);
+					++offset;
 				});
 
-				var prev = child.prev();
-
-				rule.parent().add(child, index + i + 1);
-
-				if (prev.type === 'Comment') {
-					child.before(prev);
-					++i;
-				}
-
-				++i;
-			});
-
-			if (rule.children({type: 'Selector'}).length === rule.length) {
-				rule.remove();
+			if (!parentRule.firstChild({type: 'Block'}).length) {
+				parentRule.remove();
 			}
 		}
 	});
+
+	function merge (selector, element) {
+		if (element[0].name !== '&') {
+			return selector.push(element);
+		}
+
+		element[0].remove();
+
+		if (element.length) {
+			var prevElement = selector.slice(-1)[0];
+			var curr = element[0];
+
+			if (curr.is({
+				type: 'Keyword',
+				name: /^\w/
+			})) {
+				prevElement.unshift(curr);
+			} else {
+				prevElement.push(curr);
+			}
+		}
+	}
 };
