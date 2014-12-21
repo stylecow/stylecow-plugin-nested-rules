@@ -1,7 +1,10 @@
 module.exports = function (stylecow) {
 
 	stylecow.addTask({
-		Rule: function (parentRule) {
+		filter: {
+			type: 'Rule'
+		},
+		fn: function (parentRule) {
 			var parentSelectors = parentRule.firstChild({type: 'Selectors'});
 			var index = parentRule.index();
 			var offset = 1;
