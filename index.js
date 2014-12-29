@@ -36,7 +36,7 @@ module.exports = function (stylecow) {
 					++offset;
 				});
 
-			if (!parentRule.firstChild({type: 'Block'}).length) {
+			if (!parentRule.firstChild('Block').length) {
 				parentRule.remove();
 			}
 		}
@@ -51,7 +51,7 @@ module.exports = function (stylecow) {
 
 		if (element.length) {
 			var prevElement = selector.slice(-1)[0];
-			var curr = element[0];
+			var curr = element.shift();
 
 			if (curr.is({
 				type: 'Keyword',
@@ -61,6 +61,10 @@ module.exports = function (stylecow) {
 			} else {
 				prevElement.push(curr);
 			}
+
+			element.forEach(function (child) {
+				prevElement.push(element);
+			});
 		}
 	}
 };
