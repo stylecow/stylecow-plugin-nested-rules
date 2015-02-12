@@ -9,6 +9,9 @@
 		"type": "git",
 		"url": "https://github.com/stylecow/stylecow-plugin-nested-rules.git"
 	},
+	"devDependencies": {
+		"stylecow": "*"
+	},
 	"main": "index.js",
 	"license": "MIT"
 }

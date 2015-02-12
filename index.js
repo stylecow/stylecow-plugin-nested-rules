@@ -18,15 +18,7 @@ module.exports = function (stylecow) {
 
 					parentSelectors.forEach(function (parentSelector) {
 						selectors.forEach(function (selector) {
-							var mergedSelector = parentSelector.clone();
-
-							merge(mergedSelector, selector[0].clone());
-
-							selector.slice(1).forEach(function (element) {
-								mergedSelector.push(element.clone());
-							});
-
-							mergedSelectors.push(mergedSelector);
+							mergedSelectors.push(merge(parentSelector.clone(), selector.clone()));
 						});
 					});
 
@@ -42,29 +34,42 @@ module.exports = function (stylecow) {
 		}
 	});
 
-	function merge (selector, element) {
-		if (element[0].name !== '&') {
-			return selector.push(element);
+	function merge (selector, appendedSelector) {
+		var firstElement = appendedSelector.shift();
+
+		// html { .foo {  => html .foo
+		if (firstElement.type !== 'Combinator') {
+			var separator = new stylecow.Combinator();
+			separator.name = ' ';
+			selector.push(separator);
+			selector.push(firstElement);
+		}
+		
+		// html { >.foo {  => html>.foo
+		else if (firstElement.name !== '&') {
+			selector.push(firstElement);
 		}
 
-		element[0].remove();
+		// .foo { &html {  => html.foo
+		else if (appendedSelector.length && (appendedSelector[0].is({
+			type: 'Keyword',
+			name: /^\w/
+		}))) {
+			firstElement = appendedSelector.shift();
 
-		if (element.length) {
-			var prevElement = selector.slice(-1)[0];
-			var curr = element.shift();
+			var combinators = selector.children('Combinator');
 
-			if (curr.is({
-				type: 'Keyword',
-				name: /^\w/
-			})) {
-				prevElement.unshift(curr);
+			if (combinators.length) {
+				combinators.pop().after(firstElement);
 			} else {
-				prevElement.push(curr);
+				selector.unshift(firstElement);
 			}
-
-			element.forEach(function (child) {
-				prevElement.push(element);
-			});
 		}
+
+		while (appendedSelector[0]) {
+			selector.push(appendedSelector[0]);
+		}
+
+		return selector;
 	}
 };

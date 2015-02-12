@@ -1,0 +1,15 @@
+body p {
+	color: blue;
+}
+body.bar, body:hover {
+	color: blue;
+}
+div p.foo {
+	color: blue;
+}
+div ul.foo {
+	color: blue;
+}
+div .foo.bar {
+	color: blue;
+}
