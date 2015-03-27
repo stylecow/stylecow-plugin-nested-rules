@@ -4,12 +4,21 @@
 	.bar {
 		color: black;
 
-
 		@media (min-width: 500px) {
 			color: blue;
 
 			span {
 				color: green;
+			}
+		}
+	}
+
+	@media (min-width: 700px) {
+		> strong {
+			font-weight: normal;
+
+			em {
+				font-style: normal;
 			}
 		}
 	}

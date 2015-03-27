@@ -5,12 +5,18 @@
 	color: black;
 }
 @media (min-width: 500px) {
-	.foo {
-		.bar {
-			color: blue;
-			span {
-				color: green;
-			}
-		}
+	.foo .bar {
+		color: blue;
+	}
+	.foo .bar span {
+		color: green;
+	}
+}
+@media (min-width: 700px) {
+	.foo > strong {
+		font-weight: normal;
+	}
+	.foo > strong em {
+		font-style: normal;
 	}
 }

@@ -5,28 +5,25 @@ module.exports = function (stylecow) {
 			type: 'Rule'
 		},
 		fn: function (parentRule) {
-
-			// resolve nested @media
-			parentRule
-				.firstChild({type: 'Block'})
-				.children({
-					type: 'AtRule',
-					name: 'media'
-				})
-				.forEach(function (media) {
-					nestedMedia(parentRule, media);
-				});
-
-			// resolve nested rules
 			var index = parentRule.index();
 			var offset = 1;
 
 			parentRule
 				.firstChild({type: 'Block'})
-				.children('Rule')
+				.children()
 				.forEach(function (child) {
-					nestedRule(parentRule, child, index + offset);
-					++offset;
+
+					// resolve nested @media
+					if (child.type === 'AtRule' && child.name === 'media') {
+						nestedMedia(parentRule, child, index + offset);
+						++offset;
+					}
+
+					// resolve nested rules
+					else if (child.type === 'Rule') {
+						nestedRule(parentRule, child, index + offset);
+						++offset;
+					}
 				});
 
 			if (!parentRule.firstChild('Block').length) {
@@ -35,7 +32,7 @@ module.exports = function (stylecow) {
 		}
 	});
 
-	function nestedMedia(parentRule, media) {
+	function nestedMedia(parentRule, media, parentRuleIndex) {
 		var rule = new stylecow.Rule();
 
 		rule.push(parentRule.firstChild('Selectors').clone());
@@ -46,7 +43,23 @@ module.exports = function (stylecow) {
 
 		media.push(block);
 
-		parentRule.after(media);
+
+		var index = rule.index();
+		var offset = 1;
+
+		rule
+			.firstChild({type: 'Block'})
+			.children('Rule')
+			.forEach(function (child) {
+				nestedRule(rule, child, index + offset);
+				++offset;
+			});
+
+		if (rule.firstChild('Block').length === 0) {
+			rule.remove();
+		}
+
+		parentRule.parent().splice(parentRuleIndex, 0, media);
 	}
 
 	function nestedRule(parentRule, rule, parentRuleIndex) {
