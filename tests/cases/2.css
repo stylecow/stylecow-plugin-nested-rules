@@ -1,0 +1,16 @@
+.foo {
+	color: red;
+
+	.bar {
+		color: black;
+
+
+		@media (min-width: 500px) {
+			color: blue;
+
+			span {
+				color: green;
+			}
+		}
+	}
+}

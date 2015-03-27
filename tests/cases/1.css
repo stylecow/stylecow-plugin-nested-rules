@@ -1,0 +1,21 @@
+body {
+	p {
+		color: blue;
+	}
+
+	&.bar,
+	&:hover {
+		color: blue;
+	}
+}
+div .foo {
+	&p {
+		color: blue;
+	}
+	&ul {
+		color: blue;
+	}
+	&.bar {
+		color: blue;
+	}
+}
