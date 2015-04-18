@@ -10,7 +10,7 @@
 		"url": "https://github.com/stylecow/stylecow-plugin-nested-rules.git"
 	},
 	"devDependencies": {
-		"stylecow-parser": "2.*"
+		"stylecow": "6.*"
 	},
 	"scripts": {
 		"test": "mocha tests/cases.js"
