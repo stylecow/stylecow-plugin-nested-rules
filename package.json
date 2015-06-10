@@ -1,20 +1,21 @@
 {
-	"name": "stylecow-plugin-nested-rules",
-	"description": "Stylecow plugin to add support for nested rules.",
-	"version": "4.0.0",
-	"author": "Oscar Otero <oom@oscarotero.com>",
-	"homepage": "https://github.com/stylecow/stylecow-plugin-nested-rules",
-	"bugs": "https://github.com/stylecow/stylecow-plugin-nested-rules/issues",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/stylecow/stylecow-plugin-nested-rules.git"
-	},
-	"devDependencies": {
-		"stylecow": "6.*"
-	},
-	"scripts": {
-		"test": "mocha tests/cases.js"
-	},
-	"main": "index.js",
-	"license": "MIT"
+  "name": "stylecow-plugin-nested-rules",
+  "description": "Stylecow plugin to add support for nested rules.",
+  "version": "4.0.1",
+  "author": "Oscar Otero <oom@oscarotero.com>",
+  "homepage": "https://github.com/stylecow/stylecow-plugin-nested-rules",
+  "bugs": "https://github.com/stylecow/stylecow-plugin-nested-rules/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stylecow/stylecow-plugin-nested-rules.git"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.5",
+    "stylecow": "6.*"
+  },
+  "scripts": {
+    "test": "mocha tests/cases.js"
+  },
+  "main": "index.js",
+  "license": "MIT"
 }

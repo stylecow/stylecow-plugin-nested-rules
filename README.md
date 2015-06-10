@@ -1,6 +1,8 @@
 stylecow plugin nested-rules
 ============================
 
+[![Build Status](https://travis-ci.org/stylecow/stylecow-plugin-nested-rules.svg)](https://travis-ci.org/stylecow/stylecow-plugin-nested-rules)
+
 Stylecow plugin to add support for nested rules.
 
 More info:
@@ -49,3 +51,5 @@ body div a, body span a {
 	color: orange;
 }
 ```
+
+More demos in [the tests folder](https://github.com/stylecow/stylecow-plugin-nested-rules/tree/master/tests/cases)
