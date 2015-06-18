@@ -15,7 +15,7 @@ module.exports = function (stylecow) {
 
 					// resolve nested @media
 					if (child.type === 'AtRule' && child.name === 'media') {
-						nestedMedia(parentRule, child, index + offset);
+						nestedRuleMedia(parentRule, child, index + offset);
 						++offset;
 					}
 
@@ -32,7 +32,33 @@ module.exports = function (stylecow) {
 		}
 	});
 
-	function nestedMedia(parentRule, media, parentRuleIndex) {
+	//Merge nested @media
+	stylecow.addTask({
+		filter: {
+			type: 'AtRule',
+			name: 'media'
+		},
+		fn: function (parentMedia) {
+			var index = parentMedia.index();
+			var offset = 1;
+
+			parentMedia
+				.getChild('Block')
+				.getChildren({
+					type: 'AtRule',
+					name: 'media'
+				})
+				.forEach(function (child) {
+					nestedMedia(parentMedia, child, index + offset);
+				});
+
+			if (!parentMedia.getChild('Block').length) {
+				parentRule.remove();
+			}
+		}
+	});
+
+	function nestedRuleMedia(parentRule, media, parentRuleIndex) {
 		var rule = new stylecow.Rule();
 
 		rule.push(parentRule.getChild('Selectors').clone());
@@ -60,6 +86,22 @@ module.exports = function (stylecow) {
 		parentRule.getParent().splice(parentRuleIndex, 0, media);
 	}
 
+	function nestedMedia(parentMedia, media, parentMediaIndex) {
+		var mediaQueries = media.getChild('MediaQueries');
+		var mergedMediaQueries = new stylecow.MediaQueries();
+
+		parentMedia
+			.getChild('MediaQueries')
+			.forEach(function (parentMediaQuery) {
+				mediaQueries.forEach(function (mediaQuery) {
+					mergedMediaQueries.push(mergeMediaQuery(parentMediaQuery.clone(), mediaQuery.clone()));
+				});
+			});
+
+		mediaQueries.replaceWith(mergedMediaQueries);
+		parentMedia.getParent().splice(parentMediaIndex, 0, media);
+	}
+
 	function nestedRule(parentRule, rule, parentRuleIndex) {
 		var selectors = rule.getChild('Selectors');
 		var mergedSelectors = new stylecow.Selectors();
@@ -68,7 +110,7 @@ module.exports = function (stylecow) {
 			.getChild('Selectors')
 			.forEach(function (parentSelector) {
 				selectors.forEach(function (selector) {
-					mergedSelectors.push(merge(parentSelector.clone(), selector.clone()));
+					mergedSelectors.push(mergeSelector(parentSelector.clone(), selector.clone()));
 				});
 			});
 
@@ -76,7 +118,7 @@ module.exports = function (stylecow) {
 		parentRule.getParent().splice(parentRuleIndex, 0, rule);
 	}
 
-	function merge (selector, appendedSelector) {
+	function mergeSelector (selector, appendedSelector) {
 		var joinCombinator = appendedSelector.getChild({
 			type: 'Combinator',
 			name: '&'
@@ -110,5 +152,20 @@ module.exports = function (stylecow) {
 		joinCombinator.remove();
 
 		return appendedSelector;
+	}
+
+	function mergeMediaQuery (mediaQueries, appendedMediaQuery) {
+		var expression = new stylecow.ConditionalExpression();
+
+		while (appendedMediaQuery[0]) {
+			expression.push(appendedMediaQuery.shift());
+		}
+
+		var joinKeyword = (new stylecow.Keyword()).setName('and');
+
+		mediaQueries.push(joinKeyword);
+		mediaQueries.push(expression);
+
+		return mediaQueries;
 	}
 };

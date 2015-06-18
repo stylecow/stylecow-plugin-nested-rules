@@ -1,0 +1,23 @@
+.foo {
+	color: red;
+
+	.bar {
+		color: black;
+
+		@media (min-width: 500px) {
+			color: blue;
+
+			span {
+				color: green;
+			}
+
+			p {
+				color: black;
+				
+				@media (max-width: 899px) {
+					color: red;
+				} 
+			}
+		}
+	}
+}
