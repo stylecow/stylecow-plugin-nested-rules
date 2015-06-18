@@ -1,0 +1,14 @@
+body {
+	p {
+		color: blue;
+	}
+
+	html &,
+	.active & {
+		color: blue;
+
+		span {
+			color: blue;
+		}
+	}
+}

@@ -77,37 +77,38 @@ module.exports = function (stylecow) {
 	}
 
 	function merge (selector, appendedSelector) {
-		var firstElement = appendedSelector.shift();
+		var joinCombinator = appendedSelector.getChild({
+			type: 'Combinator',
+			name: '&'
+		});
 
-		// html { .foo {  => html .foo
-		if (firstElement.type !== 'Combinator') {
-			var separator = (new stylecow.Combinator()).setName(' ');
-			selector.push(separator);
-			selector.push(firstElement);
+		if (!joinCombinator) {
+			if (appendedSelector[0].type !== 'Combinator') {
+				appendedSelector.unshift((new stylecow.Combinator()).setName(' '));
+			}
+			joinCombinator = (new stylecow.Combinator()).setName('&');
+			appendedSelector.unshift(joinCombinator);
 		}
-		
-		// html { >.foo {  => html>.foo
-		else if (firstElement.name !== '&') {
-			selector.push(firstElement);
-		}
 
-		// .foo { &html {  => html.foo
-		else if (appendedSelector.length && appendedSelector[0].is('TypeSelector')) {
-			firstElement = appendedSelector.shift();
+		//resolve .foo&html => html.foo
+		var next = joinCombinator.next();
 
+		if (next && next.is('TypeSelector')) {
 			var combinators = selector.getChildren('Combinator');
 
 			if (combinators.length) {
-				combinators.pop().after(firstElement);
+				combinators.pop().after(next);
 			} else {
-				selector.unshift(firstElement);
+				selector.unshift(next);
 			}
 		}
 
-		while (appendedSelector[0]) {
-			selector.push(appendedSelector[0]);
+		while (selector[0]) {
+			joinCombinator.before(selector.shift());
 		}
 
-		return selector;
+		joinCombinator.remove();
+
+		return appendedSelector;
 	}
 };

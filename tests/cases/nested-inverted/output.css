@@ -1,0 +1,9 @@
+body p {
+	color: blue;
+}
+html body, .active body {
+	color: blue;
+}
+html body span, .active body span {
+	color: blue;
+}
