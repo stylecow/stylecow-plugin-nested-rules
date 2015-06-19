@@ -1,5 +1,5 @@
 var assert = require('assert');
-var stylecow = require('stylecow');
+var stylecow = require('stylecow-core');
 
 stylecow
 	.loadNpmModule(__dirname + '/../index')
