@@ -272,6 +272,89 @@
                               "children": [
                                 {
                                   "class": "Number",
+                                  "name": 500
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "class": "Keyword",
+                  "name": "and"
+                },
+                {
+                  "class": "ConditionalExpression",
+                  "children": [
+                    {
+                      "class": "ConditionalExpression",
+                      "children": [
+                        {
+                          "class": "ConditionalFeature",
+                          "name": "max-width",
+                          "vendor": null,
+                          "children": [
+                            {
+                              "class": "Value",
+                              "children": [
+                                {
+                                  "class": "Unit",
+                                  "name": "px",
+                                  "children": [
+                                    {
+                                      "class": "Number",
+                                      "name": 501
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "class": "Block",
+          "children": []
+        }
+      ]
+    },
+    {
+      "class": "Media",
+      "name": "media",
+      "children": [
+        {
+          "class": "MediaQueries",
+          "children": [
+            {
+              "class": "MediaQuery",
+              "children": [
+                {
+                  "class": "ConditionalExpression",
+                  "children": [
+                    {
+                      "class": "ConditionalFeature",
+                      "name": "min-width",
+                      "vendor": null,
+                      "children": [
+                        {
+                          "class": "Value",
+                          "children": [
+                            {
+                              "class": "Unit",
+                              "name": "px",
+                              "children": [
+                                {
+                                  "class": "Number",
                                   "name": 700
                                 }
                               ]
