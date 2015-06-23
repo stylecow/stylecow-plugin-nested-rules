@@ -347,25 +347,20 @@
                   "class": "ConditionalExpression",
                   "children": [
                     {
-                      "class": "ConditionalExpression",
+                      "class": "ConditionalFeature",
+                      "name": "max-width",
+                      "vendor": null,
                       "children": [
                         {
-                          "class": "ConditionalFeature",
-                          "name": "max-width",
-                          "vendor": null,
+                          "class": "Value",
                           "children": [
                             {
-                              "class": "Value",
+                              "class": "Unit",
+                              "name": "px",
                               "children": [
                                 {
-                                  "class": "Unit",
-                                  "name": "px",
-                                  "children": [
-                                    {
-                                      "class": "Number",
-                                      "name": 899
-                                    }
-                                  ]
+                                  "class": "Number",
+                                  "name": 899
                                 }
                               ]
                             }

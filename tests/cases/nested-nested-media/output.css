@@ -15,7 +15,7 @@
 		color: black;
 	}
 }
-@media (min-width: 500px) and ((max-width: 899px)) {
+@media (min-width: 500px) and (max-width: 899px) {
 	.foo .bar p {
 		color: red;
 	}

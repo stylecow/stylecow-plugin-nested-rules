@@ -151,15 +151,20 @@ module.exports = function (stylecow) {
 	}
 
 	function mergeMediaQuery (mediaQueries, appendedMediaQuery) {
+		mediaQueries.push((new stylecow.Keyword()).setName('and'));
+
+		if ((appendedMediaQuery.length === 1) && (appendedMediaQuery[0].type === 'ConditionalExpression')) {
+			mediaQueries.push(appendedMediaQuery[0]);
+
+			return mediaQueries;
+		}
+
 		var expression = new stylecow.ConditionalExpression();
 
 		while (appendedMediaQuery[0]) {
 			expression.push(appendedMediaQuery.shift());
 		}
 
-		var joinKeyword = (new stylecow.Keyword()).setName('and');
-
-		mediaQueries.push(joinKeyword);
 		mediaQueries.push(expression);
 
 		return mediaQueries;
