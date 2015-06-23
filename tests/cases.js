@@ -3,6 +3,7 @@ var stylecow = require('stylecow-core');
 
 stylecow
 	.loadNpmModule(__dirname + '/../index')
+	.loadNpmModule('stylecow-plugin-custom-media')
 	.minSupport({
 		"explorer": 0,
 		"firefox": 0,
