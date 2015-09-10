@@ -1,18 +1,16 @@
-module.exports = function (stylecow) {
+"use strict";
 
-	stylecow.addTask({
-		filter: {
-			type: 'Rule'
-		},
+module.exports = function (tasks, stylecow) {
+
+	tasks.addTask({
+		filter: 'Rule',
 		fn: function (parentRule) {
-			var index = parentRule.index();
-			var offset = 1;
+			var index = parentRule.index(), offset = 1;
 
 			parentRule
 				.getChild('Block')
 				.getChildren()
 				.forEach(function (child) {
-
 					// resolve nested @media
 					if (child.type === 'AtRule' && child.name === 'media') {
 						nestedRuleMedia(parentRule, child, index + offset);
@@ -26,6 +24,7 @@ module.exports = function (stylecow) {
 					}
 				});
 
+			//remove the rule if it's empty
 			if (!parentRule.getChild('Block').length) {
 				parentRule.remove();
 			}
@@ -33,14 +32,13 @@ module.exports = function (stylecow) {
 	});
 
 	//Merge nested @media
-	stylecow.addTask({
+	tasks.addTask({
 		filter: {
 			type: 'AtRule',
 			name: 'media'
 		},
 		fn: function (parentMedia) {
-			var index = parentMedia.index();
-			var offset = 1;
+			var index = parentMedia.index(), offset = 1;
 
 			parentMedia
 				.getChild('Block')
@@ -64,8 +62,7 @@ module.exports = function (stylecow) {
 		block.push(rule);
 		media.push(block);
 
-		var index = rule.index();
-		var offset = 1;
+		var index = rule.index(), offset = 1;
 
 		rule
 			.getChild('Block')
@@ -83,8 +80,8 @@ module.exports = function (stylecow) {
 	}
 
 	function nestedMedia(parentMedia, media, parentMediaIndex) {
-		var mediaQueries = media.getChild('MediaQueries');
-		var mergedMediaQueries = new stylecow.MediaQueries();
+		var mediaQueries = media.getChild('MediaQueries'),
+			mergedMediaQueries = new stylecow.MediaQueries();
 
 		parentMedia
 			.getChild('MediaQueries')
@@ -99,8 +96,8 @@ module.exports = function (stylecow) {
 	}
 
 	function nestedRule(parentRule, rule, parentRuleIndex) {
-		var selectors = rule.getChild('Selectors');
-		var mergedSelectors = new stylecow.Selectors();
+		var selectors = rule.getChild('Selectors'),
+			mergedSelectors = new stylecow.Selectors();
 
 		parentRule
 			.getChild('Selectors')
@@ -124,6 +121,7 @@ module.exports = function (stylecow) {
 			if (appendedSelector[0].type !== 'Combinator') {
 				appendedSelector.unshift((new stylecow.Combinator()).setName(' '));
 			}
+
 			joinCombinator = (new stylecow.Combinator()).setName('&');
 			appendedSelector.unshift(joinCombinator);
 		}
