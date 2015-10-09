@@ -2,33 +2,19 @@
 
 module.exports = function (tasks, stylecow) {
 
+    //Merge nested rules
     tasks.addTask({
         filter: 'Rule',
-        fn: function (parentRule) {
-            var index = parentRule.index(), offset = 1;
+        fn: resolveNested
+    });
 
-            parentRule
-                .getChild('Block')
-                .getChildren()
-                .forEach(function (child) {
-                    // resolve nested @media
-                    if (child.type === 'AtRule' && child.name === 'media') {
-                        nestedRuleMedia(parentRule, child, index + offset);
-                        ++offset;
-                    }
-
-                    // resolve nested rules
-                    else if (child.type === 'Rule') {
-                        nestedRule(parentRule, child, index + offset);
-                        ++offset;
-                    }
-                });
-
-            //remove the rule if it's empty
-            if (!parentRule.getChild('Block').length) {
-                parentRule.remove();
-            }
-        }
+    //Merge nested @nest
+    tasks.addTask({
+        filter: {
+            type: 'AtRule',
+            name: 'nest'
+        },
+        fn: resolveNested
     });
 
     //Merge nested @media
@@ -49,6 +35,41 @@ module.exports = function (tasks, stylecow) {
                 .forEach(child => nestedMedia(parentMedia, child, index + offset));
         }
     });
+
+    function resolveNested(parentRule) {
+        var index = parentRule.index(), offset = 1;
+
+        parentRule
+            .getChild('Block')
+            .getChildren()
+            .forEach(function (child) {
+                if (child.type === 'AtRule') {
+
+                    // resolve nested @media
+                    if (child.name === 'media') {
+                        nestedRuleMedia(parentRule, child, index + offset);
+                        ++offset;
+                    }
+
+                    // resolve @nested at-rules
+                    else if (child.name === 'nest') {
+                        nestedRule(parentRule, child, index + offset);
+                        ++offset;
+                    }
+                }
+
+                // resolve nested rules
+                else if (child.type === 'Rule') {
+                    nestedRule(parentRule, child, index + offset);
+                    ++offset;
+                }
+            });
+
+        //remove the rule if it's empty
+        if (!parentRule.getChild('Block').length) {
+            parentRule.remove();
+        }
+    }
 
     function nestedRuleMedia(parentRule, media, parentRuleIndex) {
         var rule = new stylecow.Rule();
@@ -106,6 +127,18 @@ module.exports = function (tasks, stylecow) {
             });
 
         selectors.replaceWith(mergedSelectors);
+
+        //@nest
+        if (rule.type === 'AtRule') {
+            let tmpRule = new stylecow.Rule();
+            while (rule.length) {
+                tmpRule.push(rule.shift());
+            }
+
+            rule.remove();
+            rule = tmpRule;
+        }
+
         parentRule.getParent().splice(parentRuleIndex, 0, rule);
     }
 
