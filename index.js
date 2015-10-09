@@ -143,7 +143,7 @@ module.exports = function (tasks, stylecow) {
     }
 
     function mergeSelector (selector, appendedSelector) {
-        var joinCombinator = appendedSelector.getChild({
+        var joinCombinator = appendedSelector.get({
             type: 'Combinator',
             name: '&'
         });

@@ -1,0 +1,26 @@
+.foo {
+	color: red;
+}
+.foo > .bar {
+	color: blue;
+}
+.foo {
+	color: red;
+}
+.parent .foo {
+	color: blue;
+}
+.foo {
+	color: red;
+}
+:not(.foo) {
+	color: blue;
+}
+:not(.foo):hover {
+	color: green;
+}
+@media (min-width: 400px) {
+	:not(.foo) {
+		color: red;
+	}
+}
