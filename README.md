@@ -1,7 +1,4 @@
-stylecow plugin nested-rules
-============================
-
-[![Build Status](https://travis-ci.org/stylecow/stylecow-plugin-nested-rules.svg)](https://travis-ci.org/stylecow/stylecow-plugin-nested-rules)
+# stylecow plugin nested-rules
 
 Stylecow plugin to add support for nested rules.
 
@@ -15,11 +12,12 @@ You write:
 
 ```css
 body {
-	p {
+	& p {
 		color: blue;
 	}
-	> section {
-		h1, h2 {
+	& > section {
+		& h1,
+    & h2 {
 			color: red;
 
 			&.green {
@@ -27,8 +25,9 @@ body {
 			}
 		}
 	}
-	div, span {
-		a {
+	& div,
+  & span {
+		& a {
 			color: orange;
 		}
 	}
@@ -41,15 +40,16 @@ And stylecow converts to:
 body p {
 	color: blue;
 }
-body>section h1, body>section h2 {
+body > section h1,
+body > section h2 {
 	color: red;
 }
-body>section h1 .green, body>section h2.green {
+body > section h1 .green,
+body > section h2.green {
 	color: green;
 }
-body div a, body span a {
+body div a,
+body span a {
 	color: orange;
 }
 ```
-
-More demos in [the tests folder](https://github.com/stylecow/stylecow-plugin-nested-rules/tree/master/tests/cases)
